@@ -6,10 +6,6 @@ kotlinDslPluginOptions {
     experimentalWarning.set(false)
 }
 
-repositories {
-    gradlePluginPortal()
-}
-
 dependencies {
     // TODO: use compiler directly instead of through the CLI.
     // implementation(project(":compiler"))
