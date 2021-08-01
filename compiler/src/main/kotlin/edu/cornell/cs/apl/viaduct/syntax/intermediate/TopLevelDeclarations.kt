@@ -44,7 +44,6 @@ class HostDeclarationNode(
     override fun toSurfaceNode(): edu.cornell.cs.apl.viaduct.syntax.surface.HostDeclarationNode =
         edu.cornell.cs.apl.viaduct.syntax.surface.HostDeclarationNode(
             name,
-            authority,
             sourceLocation
         )
 
@@ -78,7 +77,7 @@ class ProcessDeclarationNode(
 
     override fun printMetadata(metadata: Map<Node, PrettyPrintable>): Document =
         (metadata[this]?.let { it.asDocument.commented() + Document.forcedLineBreak } ?: Document("")) +
-        keyword("process") * protocol * body.printMetadata(metadata)
+            keyword("process") * protocol * body.printMetadata(metadata)
 }
 
 /**
@@ -158,7 +157,7 @@ class FunctionDeclarationNode(
 
     override fun printMetadata(metadata: Map<Node, PrettyPrintable>): Document =
         (metadata[this]?.let { it.asDocument.commented() + Document.forcedLineBreak } ?: Document("")) +
-        keyword("fun") * name +
+            keyword("fun") * name +
             (pcLabel?.let { listOf(it).braced() } ?: Document("")) +
             parameters.tupled() * body.printMetadata(metadata)
 

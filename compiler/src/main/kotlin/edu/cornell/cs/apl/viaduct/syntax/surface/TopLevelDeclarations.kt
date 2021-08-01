@@ -30,21 +30,31 @@ sealed class TopLevelDeclarationNode : Node()
  */
 class HostDeclarationNode(
     val name: HostNode,
-    val authority: LabelNode,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
-        get() = keyword("host") * name * ":" * listOf(authority).braced()
+        get() = keyword("host") * name
 }
 
+/**
+ * Declaration of a delegations.
+ * @param node1 The label that acts for the other label
+ * @param node2 The l
+ */
 class DelegationDeclarationNode(
     val node1: LabelNode,
     val node2: LabelNode,
+    val is_mutual: Boolean,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
-        get() = keyword("delegation:") * listOf(node1).braced() * "=>" * listOf(node2).braced()
+        get() {
+            val flag = if (is_mutual) "<" else ""
+            return keyword("delegation:") * listOf(node1).braced() *
+                flag * "=>" * listOf(node2).braced()
+        }
 }
+
 
 /**
  * A process declaration associating a protocol with the code that process should run.
