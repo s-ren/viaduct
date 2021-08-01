@@ -1,0 +1,7 @@
+/* NoSelectionSolutionError */
+
+hosts: alice;
+
+process main {
+    val tooIntegral: int{alice ∧ bob<-} = 42;
+}

@@ -1,0 +1,5 @@
+/* NameClashError */
+
+hosts: alice;
+
+process Local(host = alice, host = alice) {}

@@ -1,0 +1,5 @@
+/* TypeMismatchError */
+
+hosts: alice, bob;
+
+process Local(host = {alice, bob}) {}

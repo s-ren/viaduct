@@ -1,0 +1,8 @@
+/* InsecureDataFlowError */
+
+process main {
+    val secret: int{(alice ∧ bob)->} = 42;
+    val public: int{alice->} = secret;
+}
+
+hosts: alice;

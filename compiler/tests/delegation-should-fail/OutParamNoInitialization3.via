@@ -1,0 +1,17 @@
+/* OutParameterInitializationError */
+
+fun add10(a1: int{alice}, a2: out Array[int]{alice}) {
+    add20(&a2);
+    out a2 = Array[int]{alice}(10);
+}
+
+fun add20(arr: Array[int]{alice}) {}
+
+process main {
+    val array = Array[int]{alice}(10);
+    val a: int{alice} = 0;
+    add10(a, val b);
+    output a to alice;
+}
+
+hosts: alice, bob;
