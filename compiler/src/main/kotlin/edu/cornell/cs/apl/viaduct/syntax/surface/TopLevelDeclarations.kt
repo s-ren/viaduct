@@ -14,6 +14,7 @@ import edu.cornell.cs.apl.viaduct.syntax.HostNode
 import edu.cornell.cs.apl.viaduct.syntax.LabelNode
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariableNode
 import edu.cornell.cs.apl.viaduct.syntax.ParameterDirection
+import edu.cornell.cs.apl.viaduct.syntax.PrincipalNode
 import edu.cornell.cs.apl.viaduct.syntax.ProtocolNode
 import edu.cornell.cs.apl.viaduct.syntax.SourceLocation
 import edu.cornell.cs.apl.viaduct.syntax.ValueTypeNode
@@ -23,10 +24,9 @@ import edu.cornell.cs.apl.viaduct.syntax.datatypes.ImmutableCell
 sealed class TopLevelDeclarationNode : Node()
 
 /**
- * Declaration of a participant and their authority.
+ * Declaration of a host participant.
  *
  * @param name Host name.
- * @param authority Label specifying the trust placed in this host.
  */
 class HostDeclarationNode(
     val name: HostNode,
@@ -37,9 +37,23 @@ class HostDeclarationNode(
 }
 
 /**
+ * Declaration of a principal participant.
+ *
+ * @param name Principal name.
+ */
+class PrincipalDeclarationNode(
+    val name: PrincipalNode,
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+    override val asDocument: Document
+        get() = keyword("principal") * name
+}
+
+/**
  * Declaration of a delegations.
- * @param node1 The label that acts for the other label
- * @param node2 The l
+ * @param node1 The label that acts for the other label.
+ * @param node2 The other label.
+ * @param is_mutual True iff the delegation is on both directions.
  */
 class DelegationDeclarationNode(
     val node1: LabelNode,
@@ -53,6 +67,63 @@ class DelegationDeclarationNode(
             return keyword("delegation:") * listOf(node1).braced() *
                 flag * "=>" * listOf(node2).braced()
         }
+}
+
+/**
+ * A set of principals as a top level declaration.
+ */
+class PrincipalDeclarationSetNode(
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+    val principals = mutableSetOf<PrincipalDeclarationNode>()
+
+    fun add(node: PrincipalDeclarationNode) = principals.add(node)
+
+    override val asDocument: Document
+        get() = keyword("principals:") *
+            principals.fold(
+                Document(),
+                { acc: Document, host: PrincipalDeclarationNode ->
+                    acc * host
+                });
+}
+
+/**
+ * A set of hosts as a top level declaration.
+ */
+class HostDeclarationSetNode(
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+    val principals = mutableSetOf<HostDeclarationNode>()
+
+    fun add(node: HostDeclarationNode) = principals.add(node)
+
+    override val asDocument: Document
+        get() = keyword("hosts:") *
+            principals.fold(
+                Document(),
+                { acc: Document, host: HostDeclarationNode ->
+                    acc * host
+                });
+}
+
+/**
+ * A set of delegations as top level declaration.
+ */
+class DelegationDeclarationSetNode(
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+    val delegations = mutableSetOf<DelegationDeclarationNode>()
+
+    fun add(node: DelegationDeclarationNode) = delegations.add(node)
+
+    override val asDocument: Document
+        get() = keyword("delegations:") *
+            delegations.fold(
+                Document(),
+                { acc: Document, delegation: DelegationDeclarationNode ->
+                    acc * delegation
+                });
 }
 
 

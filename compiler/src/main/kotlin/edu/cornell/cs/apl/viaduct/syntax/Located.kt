@@ -19,6 +19,9 @@ data class Located<out T : PrettyPrintable>(
         get() = value.asDocument
 }
 
+// TODO: Make principal classes
+typealias PrincipalNode = Located<Host>
+
 typealias HostNode = Located<Host>
 
 typealias ProtocolNode = Located<Protocol>

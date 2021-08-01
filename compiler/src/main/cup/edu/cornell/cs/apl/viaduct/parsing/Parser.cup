@@ -206,7 +206,6 @@ program ::=
         throw new NoMainError(((Lexer) getScanner()).sourceFile.getPath());
       }
 
-
       RESULT = new ProgramNode(declarations, location(declarationsleft, declarationsright));
     :}
   ;
@@ -223,11 +222,11 @@ declaration_list ::=
   ;
 
 declaration ::=
-    HOSTS:begin COLON host:host_list {:
+    HOSTS:begin COLON host_list:hl {:
     :}
-  | PRINCIPALS:begin COLON host:host_list {:
+  | PRINCIPALS:begin COLON host_list:hl {:
     :}
-  | ASSUME:begin COLON delegation_list {:
+  | ASSUME:begin COLON delegation_list:dl {:
     :}
 //    HOST:begin host:host COLON label:authority {:
 //      RESULT = new HostDeclarationNode(host, authority, location(beginleft, authorityright));
