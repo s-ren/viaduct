@@ -150,6 +150,7 @@ terminal int INT_LIT;
 terminal TRUE, FALSE;
 
 terminal HOST, PROCESS;
+terminal HOSTS, ASSUME;
 terminal CAP_HOST;
 terminal FUNCTION;
 terminal OUT;
@@ -166,6 +167,7 @@ terminal NOT, ANDAND, OROR;
 terminal EQEQ, NEQ, LT, LEQ, GT, GEQ;
 terminal PLUS, MINUS, TIMES, DIVIDE;
 terminal MIN, MAX, MUX;
+terminal IMPLY, IMPLYEQ;
 
 terminal DECLASSIFY, ENDORSE, DOWNGRADE;
 
