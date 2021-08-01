@@ -73,12 +73,9 @@ class DelegationDeclarationNode(
  * A set of principals as a top level declaration.
  */
 class PrincipalDeclarationSetNode(
+    val principals: Set<PrincipalDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
-    val principals = mutableSetOf<PrincipalDeclarationNode>()
-
-    fun add(node: PrincipalDeclarationNode) = principals.add(node)
-
     override val asDocument: Document
         get() = keyword("principals:") *
             principals.fold(
@@ -92,15 +89,12 @@ class PrincipalDeclarationSetNode(
  * A set of hosts as a top level declaration.
  */
 class HostDeclarationSetNode(
+    val hosts: Set<HostDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
-    val principals = mutableSetOf<HostDeclarationNode>()
-
-    fun add(node: HostDeclarationNode) = principals.add(node)
-
     override val asDocument: Document
         get() = keyword("hosts:") *
-            principals.fold(
+            hosts.fold(
                 Document(),
                 { acc: Document, host: HostDeclarationNode ->
                     acc * host
@@ -111,12 +105,9 @@ class HostDeclarationSetNode(
  * A set of delegations as top level declaration.
  */
 class DelegationDeclarationSetNode(
+    val delegations: Set<DelegationDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
-    val delegations = mutableSetOf<DelegationDeclarationNode>()
-
-    fun add(node: DelegationDeclarationNode) = delegations.add(node)
-
     override val asDocument: Document
         get() = keyword("delegations:") *
             delegations.fold(
