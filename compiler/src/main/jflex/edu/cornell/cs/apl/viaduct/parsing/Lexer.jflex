@@ -98,7 +98,8 @@ NUM         = ((-)?[1-9][0-9]*) | 0
 
   /* delegation syntax */
   "assume"        { return symbol(sym.ASSUME); }
-  "hosts"        { return symbol(sym.HOSTS); }
+  "hosts"         { return symbol(sym.HOSTS); }
+  "principals"    { return symbol(sym.PRINCIPALS); }
 
   /* Types */
   "int"           { return symbol(sym.INT); }

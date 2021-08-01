@@ -37,6 +37,15 @@ class HostDeclarationNode(
         get() = keyword("host") * name * ":" * listOf(authority).braced()
 }
 
+class DelegationDeclarationNode(
+    val node1: LabelNode,
+    val node2: LabelNode,
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+    override val asDocument: Document
+        get() = keyword("delegation:") * listOf(node1).braced() * "=>" * listOf(node2).braced()
+}
+
 /**
  * A process declaration associating a protocol with the code that process should run.
  *

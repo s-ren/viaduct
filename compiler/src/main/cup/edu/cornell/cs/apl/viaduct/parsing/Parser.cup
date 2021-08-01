@@ -150,7 +150,7 @@ terminal int INT_LIT;
 terminal TRUE, FALSE;
 
 terminal HOST, PROCESS;
-terminal HOSTS, ASSUME;
+terminal HOSTS, PRINCIPALS, ASSUME;
 terminal CAP_HOST;
 terminal FUNCTION;
 terminal OUT;
@@ -223,13 +223,19 @@ declaration_list ::=
   ;
 
 declaration ::=
-    HOST:begin host:host COLON label:authority {:
-      RESULT = new HostDeclarationNode(host, authority, location(beginleft, authorityright));
+    HOSTS:begin COLON host:host_list {:
     :}
-
-  | PROCESS:begin protocol:protocol block:body {:
-      RESULT = new ProcessDeclarationNode(protocol, body, location(beginleft, bodyright));
+  | PRINCIPALS:begin COLON host:host_list {:
     :}
+  | ASSUME:begin COLON delegation_list {:
+    :}
+//    HOST:begin host:host COLON label:authority {:
+//      RESULT = new HostDeclarationNode(host, authority, location(beginleft, authorityright));
+//    :}
+//
+//  | PROCESS:begin protocol:protocol block:body {:
+//      RESULT = new ProcessDeclarationNode(protocol, body, location(beginleft, bodyright));
+//    :}
 
   | FUNCTION:begin IDENT:funcname optional_label_signature:label
     OPEN_PAREN:paramsbegin parameter_list:params CLOSE_PAREN:paramsclose block:body {:
@@ -241,6 +247,14 @@ declaration ::=
         location(beginleft, bodyright)
       );
   :}
+  ;
+
+delegation_list ::=
+    delegation_list:delegations delegation:delegation {:
+    :}
+
+  | /* empty */ {:
+    :}
   ;
 
 parameter_list ::=
