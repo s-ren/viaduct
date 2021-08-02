@@ -35,9 +35,10 @@ sealed class TopLevelDeclarationNode : Node() {
  */
 class HostDeclarationNode(
     val name: HostNode,
-    val authority: LabelNode,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
+
+    val authority: LabelNode = TODO()
     override val children: Iterable<Nothing>
         get() = listOf()
 
@@ -48,7 +49,7 @@ class HostDeclarationNode(
         )
 
     override fun copy(children: List<Node>): HostDeclarationNode =
-        HostDeclarationNode(name, authority, sourceLocation)
+        HostDeclarationNode(name, sourceLocation)
 }
 
 /**

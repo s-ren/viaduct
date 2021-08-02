@@ -294,23 +294,38 @@ delegation_list ::=
 
 host_decl ::=
     IDENT:id {:
-      RESULT = new HostDeclarationNode(id, location(idleft, idright));
+      RESULT = new HostDeclarationNode(
+          new Located(new Host(id), location(idleft, idright)),
+          location(idleft, idright)
+      );
     :}
   ;
 
 principal ::=
     IDENT:id {:
-    RESULT = new PrincipalDeclarationNode(id, location(idleft, idright));
+    RESULT = new PrincipalDeclarationNode(
+        new Located(new Host(id), location(idleft, idright)),
+        location(idleft, idright)
+    );
     :}
 ;
 
 delegation ::=
     label_expr:label1 IMPLY label_expr:label2  {:
-    RESULT = new DelegationDeclarationNode(label1, label2, false, location(label1left, label2right));
+    RESULT = new DelegationDeclarationNode(
+        new Located(label1, location(label1left, label1right)),
+        new Located(label2, location(label2left, label2right)),
+        false,
+        location(label1left, label2right)
+    );
     :}
     | label_expr:label1 IMPLYEQ label_expr:label2  {:
-      RESULT = new DelegationDeclarationNode(label1, label2, true, location(label1left, label2right));
-    :}
+    RESULT = new DelegationDeclarationNode(
+        new Located(label1, location(label1left, label1right)),
+        new Located(label2, location(label2left, label2right)),
+        true,
+        location(label1left, label2right)
+    );    :}
 ;
 
 

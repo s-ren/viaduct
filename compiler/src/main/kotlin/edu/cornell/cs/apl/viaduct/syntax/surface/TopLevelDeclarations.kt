@@ -73,15 +73,15 @@ class DelegationDeclarationNode(
  * A set of principals as a top level declaration.
  */
 class PrincipalDeclarationSetNode(
-    val principals: Set<PrincipalDeclarationNode>,
+    val principals: List<PrincipalDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
         get() = keyword("principals:") *
             principals.fold(
                 Document(),
-                { acc: Document, host: PrincipalDeclarationNode ->
-                    acc * host
+                { acc: Document, principal: PrincipalDeclarationNode ->
+                    acc * principal
                 });
 }
 
@@ -89,7 +89,7 @@ class PrincipalDeclarationSetNode(
  * A set of hosts as a top level declaration.
  */
 class HostDeclarationSetNode(
-    val hosts: Set<HostDeclarationNode>,
+    val hosts: List<HostDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
@@ -105,7 +105,7 @@ class HostDeclarationSetNode(
  * A set of delegations as top level declaration.
  */
 class DelegationDeclarationSetNode(
-    val delegations: Set<DelegationDeclarationNode>,
+    val delegations: List<DelegationDeclarationNode>,
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
