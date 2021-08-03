@@ -15,6 +15,7 @@ import edu.cornell.cs.apl.viaduct.syntax.LabelNode
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariable
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariableNode
 import edu.cornell.cs.apl.viaduct.syntax.ParameterDirection
+import edu.cornell.cs.apl.viaduct.syntax.PrincipalNode
 import edu.cornell.cs.apl.viaduct.syntax.ProtocolNode
 import edu.cornell.cs.apl.viaduct.syntax.SourceLocation
 import edu.cornell.cs.apl.viaduct.syntax.ValueTypeNode
@@ -28,10 +29,9 @@ sealed class TopLevelDeclarationNode : Node() {
 }
 
 /**
- * Declaration of a participant and their authority.
+ * Declaration of a host participant.
  *
  * @param name Host name.
- * @param authority Label specifying the trust placed in this host.
  */
 class HostDeclarationNode(
     val name: HostNode,
@@ -50,6 +50,57 @@ class HostDeclarationNode(
 
     override fun copy(children: List<Node>): HostDeclarationNode =
         HostDeclarationNode(name, sourceLocation)
+}
+
+/**
+ * Declaration of a principal participant.
+ *
+ * @param name Host name.
+ */
+class PrincipalDeclarationNode(
+    val name: PrincipalNode,
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+
+    override val children: Iterable<Nothing>
+        get() = listOf()
+
+    override fun toSurfaceNode(): edu.cornell.cs.apl.viaduct.syntax.surface.PrincipalDeclarationNode =
+        edu.cornell.cs.apl.viaduct.syntax.surface.PrincipalDeclarationNode(
+            name,
+            sourceLocation
+        )
+
+    override fun copy(children: List<Node>): PrincipalDeclarationNode =
+        PrincipalDeclarationNode(name, sourceLocation)
+}
+
+/**
+ * Declaration of a delegations.
+ * @param node1 The label that acts for the other label.
+ * @param node2 The other label.
+ * @param is_mutual True iff the delegation is on both directions.
+ */
+class DelegationDeclarationNode(
+    val node1: LabelNode,
+    val node2: LabelNode,
+    val is_mutual: Boolean,
+    override val sourceLocation: SourceLocation
+) : TopLevelDeclarationNode() {
+
+    override val children: Iterable<Nothing>
+        get() = listOf()
+
+    override fun toSurfaceNode(): edu.cornell.cs.apl.viaduct.syntax.surface.DelegationDeclarationNode =
+        edu.cornell.cs.apl.viaduct.syntax.surface.DelegationDeclarationNode(
+            node1,
+            node2,
+            is_mutual,
+            sourceLocation
+        )
+
+    override fun copy(children: List<Node>): DelegationDeclarationNode =
+        DelegationDeclarationNode(node1, node2, is_mutual, sourceLocation)
 }
 
 /**

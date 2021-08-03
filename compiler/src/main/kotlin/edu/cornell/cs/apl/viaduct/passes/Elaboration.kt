@@ -1,5 +1,6 @@
 package edu.cornell.cs.apl.viaduct.passes
 
+
 import edu.cornell.cs.apl.viaduct.errors.InvalidConstructorCallError
 import edu.cornell.cs.apl.viaduct.errors.JumpOutsideLoopScopeError
 import edu.cornell.cs.apl.viaduct.syntax.Arguments
@@ -23,6 +24,7 @@ import edu.cornell.cs.apl.viaduct.syntax.intermediate.BlockNode as IBlockNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.BreakNode as IBreakNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.DeclarationNode as IDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.DeclassificationNode as IDeclassificationNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.DelegationDeclarationNode as IDelegationDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.EndorsementNode as IEndorsementNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ExpressionArgumentNode as IExpressionArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ExpressionNode as IExpressionNode
@@ -44,6 +46,7 @@ import edu.cornell.cs.apl.viaduct.syntax.intermediate.OutParameterExpressionInit
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.OutParameterInitializationNode as IOutParameterInitializationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.OutputNode as IOutputNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ParameterNode as IParameterNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.PrincipalDeclarationNode as IPrincipalDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProcessDeclarationNode as IProcessDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProgramNode as IProgramNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.QueryNode as IQueryNode
@@ -59,6 +62,7 @@ import edu.cornell.cs.apl.viaduct.syntax.surface.BreakNode as SBreakNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.ConstructorCallNode as SConstructorCallNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.DeclarationNode as SDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.DeclassificationNode as SDeclassificationNode
+import edu.cornell.cs.apl.viaduct.syntax.surface.DelegationDeclarationSetNode as SDelegationDeclarationSetNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.EndorsementNode as SEndorsementNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.ExpressionArgumentNode as SExpressionArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.ExpressionNode as SExpressionNode
@@ -66,7 +70,7 @@ import edu.cornell.cs.apl.viaduct.syntax.surface.ForLoopNode as SForLoopNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.FunctionArgumentNode as SFunctionArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.FunctionCallNode as SFunctionCallNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.FunctionDeclarationNode as SFunctionDeclarationNode
-import edu.cornell.cs.apl.viaduct.syntax.surface.HostDeclarationNode as SHostDeclarationNode
+import edu.cornell.cs.apl.viaduct.syntax.surface.HostDeclarationSetNode as SHostDeclarationSetNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.IfNode as SIfNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.InfiniteLoopNode as SInfiniteLoopNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.InputNode as SInputNode
@@ -78,6 +82,7 @@ import edu.cornell.cs.apl.viaduct.syntax.surface.OperatorApplicationNode as SOpe
 import edu.cornell.cs.apl.viaduct.syntax.surface.OutParameterArgumentNode as SOutParameterArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.OutParameterInitializationNode as SOutParameterInitializationNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.OutputNode as SOutputNode
+import edu.cornell.cs.apl.viaduct.syntax.surface.PrincipalDeclarationSetNode as SPrincipalDeclarationSetNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.ProcessDeclarationNode as SProcessDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.ProgramNode as SProgramNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.QueryNode as SQueryNode
@@ -88,6 +93,7 @@ import edu.cornell.cs.apl.viaduct.syntax.surface.SkipNode as SSkipNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.StatementNode as SStatementNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.UpdateNode as SUpdateNode
 import edu.cornell.cs.apl.viaduct.syntax.surface.WhileLoopNode as SWhileLoopNode
+
 
 /**
  * Elaborates this surface program into a program in the intermediate representation.
@@ -105,7 +111,7 @@ fun SProgramNode.elaborated(): IProgramNode {
 
     for (declaration in this.declarations) {
         when (declaration) {
-            is SHostDeclarationNode -> {
+            /*is SHostDeclarationNode -> {
                 hosts = hosts.put(declaration.name, true)
                 declarations.add(
                     IHostDeclarationNode(
@@ -113,6 +119,43 @@ fun SProgramNode.elaborated(): IProgramNode {
                         declaration.sourceLocation
                     )
                 )
+            }*/
+
+            is SHostDeclarationSetNode -> {
+                for (host in declaration.hosts) {
+                    hosts.put(host.name, true)
+                    declarations.add(
+                        IHostDeclarationNode(
+                            host.name,
+                            host.sourceLocation
+                        )
+                    )
+                }
+            }
+
+            is SPrincipalDeclarationSetNode -> {
+                for (principal in declaration.principals) {
+                    hosts.put(principal.name, true)
+                    declarations.add(
+                        IPrincipalDeclarationNode(
+                            principal.name,
+                            principal.sourceLocation
+                        )
+                    )
+                }
+            }
+
+            is SDelegationDeclarationSetNode -> {
+                for (delegation in declaration.delegations) {
+                    declarations.add(
+                        IDelegationDeclarationNode(
+                            delegation.node1,
+                            delegation.node2,
+                            delegation.is_mutual,
+                            delegation.sourceLocation
+                        )
+                    )
+                }
             }
 
             is SProcessDeclarationNode -> {

@@ -9,12 +9,14 @@ import edu.cornell.cs.apl.viaduct.syntax.Protocol
 import edu.cornell.cs.apl.viaduct.syntax.Variable
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.BlockNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.DeclarationNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.DelegationDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.FunctionDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.HostDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.IfNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.InfiniteLoopNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.LetNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ParameterNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.PrincipalDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProcessDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProgramNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.StatementNode
@@ -91,6 +93,10 @@ private class ProtocolAnnotator(
                 when (decl) {
                     is HostDeclarationNode ->
                         decl
+
+                    is PrincipalDeclarationNode -> TODO()
+
+                    is DelegationDeclarationNode -> TODO()
 
                     is ProcessDeclarationNode -> {
                         if (decl.protocol.value != MainProtocol) {
