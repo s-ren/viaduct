@@ -9,4 +9,4 @@ process main {
     output b to alice;
 }
 
-hosts: alice, bob;
+hosts: alice, bob

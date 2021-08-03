@@ -8,4 +8,4 @@ process alice {
     val x: int = receive int from main;
 }
 
-hosts: alice;
+hosts: alice

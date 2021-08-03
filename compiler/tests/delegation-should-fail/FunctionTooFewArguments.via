@@ -11,4 +11,4 @@ process main {
     output a to alice;
 }
 
-hosts: alice, bob;
+hosts: alice, bob

@@ -5,5 +5,5 @@ process main {
     val trusted: int{(alice ∧ bob)<-} = untrusted;
 }
 
-hosts: alice;
+hosts: alice
 

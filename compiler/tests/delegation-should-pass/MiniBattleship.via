@@ -8,5 +8,5 @@ process main {
     output (declassify b to {(alice | bob)-> & (alice & bob)<-}) to bob;
 }
 
-hosts: alice, bob;
+hosts: alice, bob
 

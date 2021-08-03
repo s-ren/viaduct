@@ -8,4 +8,4 @@ process main {
     val y = input int from bob;
 }
 
-hosts: alice, bob;
+hosts: alice, bob

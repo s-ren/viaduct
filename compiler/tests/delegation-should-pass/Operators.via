@@ -30,5 +30,5 @@ process main {
     assert false || true;
 }
 
-hosts: god;
-assume: god => ⊥;
+hosts: god
+assume: god => ⊥

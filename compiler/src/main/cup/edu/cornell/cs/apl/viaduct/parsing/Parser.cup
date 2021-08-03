@@ -146,6 +146,7 @@ nonterminal Value protocol_argument;
 
 // New nonterminals on delegations
 nonterminal List principal_list, delegation_list, host_decl_list;
+nonterminal List nonempty_principal_list, nonempty_delegation_list, nonempty_host_decl_list;
 nonterminal PrincipalDeclarationNode principal;
 nonterminal DelegationDeclarationNode delegation;
 nonterminal HostDeclarationNode host_decl;
@@ -259,8 +260,7 @@ declaration ::=
   ;
 
 host_decl_list ::=
-    host_decl_list:hostDeclList host_decl:hostDecl {:
-      hostDeclList.add(hostDecl);
+    nonempty_host_decl_list:hostDeclList {:
       RESULT = hostDeclList;
     :}
 
@@ -269,9 +269,19 @@ host_decl_list ::=
     :}
   ;
 
+nonempty_host_decl_list ::=
+    nonempty_host_decl_list:hostDeclList COMMA host_decl:hostDecl {:
+      hostDeclList.add(hostDecl);
+      RESULT = hostDeclList;
+    :}
+
+  | host_decl:hostDecl {:
+      RESULT = CollectionsKt.mutableListOf(hostDecl);
+    :}
+  ;
+
 principal_list ::=
-    principal_list:principalList principal:principal {:
-      principalList.add(principal);
+    nonempty_principal_list:principalList {:
       RESULT = principalList;
     :}
 
@@ -280,14 +290,35 @@ principal_list ::=
     :}
   ;
 
+nonempty_principal_list ::=
+    nonempty_principal_list:principalList COMMA principal:principal {:
+      principalList.add(principal);
+      RESULT = principalList;
+    :}
+
+  | principal:principal {:
+      RESULT = CollectionsKt.mutableListOf(principal);
+    :}
+  ;
+
 delegation_list ::=
-    delegation_list:delegationList delegation:delegation {:
-      delegationList.add(delegation);
+    nonempty_delegation_list:delegationList {:
       RESULT = delegationList;
     :}
 
   | /* empty */ {:
       RESULT = CollectionsKt.mutableListOf();
+    :}
+  ;
+
+nonempty_delegation_list ::=
+    nonempty_delegation_list:delegationList COMMA delegation:delegation {:
+      delegationList.add(delegation);
+      RESULT = delegationList;
+    :}
+
+  | delegation:delegation {:
+      RESULT = CollectionsKt.mutableListOf(delegation);
     :}
   ;
 

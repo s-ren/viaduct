@@ -63,9 +63,9 @@ class DelegationDeclarationNode(
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
         get() {
-            val flag = if (is_mutual) "<" else ""
+            val flag = if (is_mutual) "<=>" else "=>"
             return keyword("delegation:") * listOf(node1).braced() *
-                flag * "=>" * listOf(node2).braced()
+                flag * listOf(node2).braced()
         }
 }
 
@@ -81,7 +81,7 @@ class PrincipalDeclarationSetNode(
             principals.fold(
                 Document(),
                 { acc: Document, principal: PrincipalDeclarationNode ->
-                    acc * principal
+                    acc * principal + ","
                 });
 }
 
@@ -97,7 +97,7 @@ class HostDeclarationSetNode(
             hosts.fold(
                 Document(),
                 { acc: Document, host: HostDeclarationNode ->
-                    acc * host
+                    acc * host + ","
                 });
 }
 
@@ -113,7 +113,7 @@ class DelegationDeclarationSetNode(
             delegations.fold(
                 Document(),
                 { acc: Document, delegation: DelegationDeclarationNode ->
-                    acc * delegation
+                    acc * delegation + ","
                 });
 }
 

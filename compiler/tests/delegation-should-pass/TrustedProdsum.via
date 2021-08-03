@@ -13,5 +13,5 @@ process main {
 }
 
 
-hosts: alice, bob;
-assume: alice<- <=> bob<-;
+hosts: alice, bob
+assume: alice<- <=> bob<-

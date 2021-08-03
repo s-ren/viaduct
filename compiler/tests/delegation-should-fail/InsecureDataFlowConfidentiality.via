@@ -5,4 +5,4 @@ process main {
     val public: int{alice->} = secret;
 }
 
-hosts: alice;
+hosts: alice
