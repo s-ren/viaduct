@@ -6,6 +6,7 @@ import edu.cornell.cs.apl.viaduct.syntax.FunctionName
 import edu.cornell.cs.apl.viaduct.syntax.Located
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.AtomicExpressionNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.BlockNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.DelegationDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.FunctionArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.FunctionCallNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.FunctionDeclarationNode
@@ -13,15 +14,16 @@ import edu.cornell.cs.apl.viaduct.syntax.intermediate.HostDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.IfNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.InfiniteLoopNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ParameterNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.PrincipalDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProcessDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProgramNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.StatementNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.TopLevelDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.deepCopy
 import edu.cornell.cs.apl.viaduct.util.FreshNameGenerator
-import java.util.LinkedList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.persistentMapOf
+import java.util.LinkedList
 
 /** Returns an AST where every call site is specialized into new functions as much as possible.
  *  This allows for the most liberal protocol selection possible, at the cost of redundancy.
@@ -35,6 +37,16 @@ fun ProgramNode.specialize(): ProgramNode {
         this.declarations
             .filterIsInstance<HostDeclarationNode>()
             .map { hostDecl -> hostDecl.deepCopy() as HostDeclarationNode }
+    )
+    newDeclarations.addAll(
+        this.declarations
+            .filterIsInstance<PrincipalDeclarationNode>()
+            .map { principalDecl -> principalDecl.deepCopy() as PrincipalDeclarationNode }
+    )
+    newDeclarations.addAll(
+        this.declarations
+            .filterIsInstance<DelegationDeclarationNode>()
+            .map { delegationDecl -> delegationDecl.deepCopy() as DelegationDeclarationNode }
     )
     newDeclarations.addAll(newFunctions)
     newDeclarations.add(

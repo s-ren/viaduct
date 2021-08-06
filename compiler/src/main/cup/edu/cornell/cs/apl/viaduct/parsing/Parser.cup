@@ -851,7 +851,7 @@ label ::=
 label_expr ::=
     CAP_IDENT:id {: RESULT = new LabelLiteral(id); :}
 
-  | IDENT:id {: RESULT = new LabelParameter(id); :}
+  | IDENT:id {: RESULT = new LabelLiteral(id); :}
 
   | TOP {: RESULT = LabelTop.INSTANCE; :}
 
@@ -895,7 +895,7 @@ label_signature ::=
 label_expr_signature ::=
     label_expr_noparam:l {: RESULT = l; :}
 
-  | IDENT:id             {: RESULT = new LabelParameter(id); :}
+  | IDENT:id             {: RESULT = new LabelLiteral(id); :}
   ;
 
 label_expr_noparam ::=
