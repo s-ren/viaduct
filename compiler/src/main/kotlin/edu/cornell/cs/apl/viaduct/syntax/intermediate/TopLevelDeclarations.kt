@@ -7,11 +7,13 @@ import edu.cornell.cs.apl.prettyprinting.commented
 import edu.cornell.cs.apl.prettyprinting.plus
 import edu.cornell.cs.apl.prettyprinting.times
 import edu.cornell.cs.apl.prettyprinting.tupled
+import edu.cornell.cs.apl.viaduct.security.LabelLiteral
 import edu.cornell.cs.apl.viaduct.syntax.Arguments
 import edu.cornell.cs.apl.viaduct.syntax.ClassNameNode
 import edu.cornell.cs.apl.viaduct.syntax.FunctionNameNode
 import edu.cornell.cs.apl.viaduct.syntax.HostNode
 import edu.cornell.cs.apl.viaduct.syntax.LabelNode
+import edu.cornell.cs.apl.viaduct.syntax.Located
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariable
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariableNode
 import edu.cornell.cs.apl.viaduct.syntax.ParameterDirection
@@ -38,7 +40,7 @@ class HostDeclarationNode(
     override val sourceLocation: SourceLocation
 ) : TopLevelDeclarationNode() {
 
-    val authority: LabelNode = TODO()
+    val authority: LabelNode = Located(LabelLiteral("xxxxx"), sourceLocation)
     override val children: Iterable<Nothing>
         get() = listOf()
 

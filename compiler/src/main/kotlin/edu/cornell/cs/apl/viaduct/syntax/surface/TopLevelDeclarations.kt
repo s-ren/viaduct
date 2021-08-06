@@ -63,7 +63,7 @@ class DelegationDeclarationNode(
 ) : TopLevelDeclarationNode() {
     override val asDocument: Document
         get() {
-            val flag = if (is_mutual) "<=>" else "=>z"
+            val flag = if (is_mutual) "<=>" else "=>"
             return keyword("delegation:") * listOf(node1).braced() *
                 flag * listOf(node2).braced()
         }
