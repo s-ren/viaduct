@@ -21,6 +21,7 @@ import edu.cornell.cs.apl.viaduct.syntax.Name
 import edu.cornell.cs.apl.viaduct.syntax.NameMap
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariable
 import edu.cornell.cs.apl.viaduct.syntax.ObjectVariableNode
+import edu.cornell.cs.apl.viaduct.syntax.Principal
 import edu.cornell.cs.apl.viaduct.syntax.Protocol
 import edu.cornell.cs.apl.viaduct.syntax.Temporary
 import edu.cornell.cs.apl.viaduct.syntax.ValueTypeNode
@@ -44,6 +45,7 @@ import edu.cornell.cs.apl.viaduct.syntax.intermediate.ObjectReferenceArgumentNod
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.OutParameterArgumentNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.OutParameterInitializationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ParameterNode
+import edu.cornell.cs.apl.viaduct.syntax.intermediate.PrincipalDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProcessDeclarationNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.ProgramNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.QueryNode
@@ -51,11 +53,11 @@ import edu.cornell.cs.apl.viaduct.syntax.intermediate.ReadNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.SimpleStatementNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.StatementNode
 import edu.cornell.cs.apl.viaduct.syntax.intermediate.UpdateNode
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  * Associates each use of a [Name] with its declaration, and every [Name] declaration with the
@@ -75,6 +77,19 @@ class NameAnalysis private constructor(private val tree: Tree<Node, ProgramNode>
             }
             else ->
                 parent.hostDeclarations
+        }
+    }
+
+    /** Host declarations in scope for this node. */
+    private val Node.principalDeclarations: NameMap<Principal, PrincipalDeclarationNode> by attribute {
+        when (val parent = tree.parent(this)) {
+            null -> {
+                require(this is ProgramNode)
+                declarations.filterIsInstance<PrincipalDeclarationNode>()
+                    .fold(NameMap()) { map, declaration -> map.put(declaration.name, declaration) }
+            }
+            else ->
+                parent.principalDeclarations
         }
     }
 
@@ -603,6 +618,8 @@ class NameAnalysis private constructor(private val tree: Tree<Node, ProgramNode>
                 is ProgramNode -> {
                     // Forcing these thunks
                     node.hostDeclarations
+                    node.principalDeclarations
+                    node.delegationDeclarations
                     node.protocolDeclarations
                     node.functionDeclarations
                 }

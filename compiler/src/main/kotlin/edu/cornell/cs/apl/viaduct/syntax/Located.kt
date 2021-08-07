@@ -20,7 +20,9 @@ data class Located<out T : PrettyPrintable>(
 }
 
 // TODO: Make principal classes
-typealias PrincipalNode = Located<Host>
+typealias Principal = Host
+
+typealias PrincipalNode = Located<Principal>
 
 typealias HostNode = Located<Host>
 

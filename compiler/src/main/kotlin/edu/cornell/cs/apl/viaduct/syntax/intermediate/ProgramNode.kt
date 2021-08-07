@@ -28,6 +28,12 @@ private constructor(
     val hostDeclarations: Iterable<HostDeclarationNode> =
         declarations.filterIsInstance<HostDeclarationNode>()
 
+    val principalDeclarations: Iterable<PrincipalDeclarationNode> =
+        declarations.filterIsInstance<PrincipalDeclarationNode>()
+
+    val delegationDeclarations: Iterable<DelegationDeclarationNode> =
+        declarations.filterIsInstance<DelegationDeclarationNode>()
+
     val hosts: Set<Host> = hostDeclarations.map { it.name.value }.toSet()
 
     val functions: Iterable<FunctionDeclarationNode> =
@@ -53,7 +59,7 @@ private constructor(
 
     override fun printMetadata(metadata: Map<Node, PrettyPrintable>): Document =
         (metadata[this]?.let { it.asDocument.commented() + Document.forcedLineBreak } ?: Document("")) +
-        declarations
-            .map { it.printMetadata(metadata) }
-            .concatenated(Document.forcedLineBreak + Document.forcedLineBreak)
+            declarations
+                .map { it.printMetadata(metadata) }
+                .concatenated(Document.forcedLineBreak + Document.forcedLineBreak)
 }
