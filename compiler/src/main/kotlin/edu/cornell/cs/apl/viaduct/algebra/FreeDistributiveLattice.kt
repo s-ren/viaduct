@@ -17,6 +17,8 @@ private typealias JoinOfMeets<A> = PersistentSet<Meet<A>>
  */
 class FreeDistributiveLattice<A> private constructor(joinOfMeets: JoinOfMeets<A>) :
     HeytingAlgebra<FreeDistributiveLattice<A>> {
+    //private var congruences: Set<Pair<A, A>>
+
     private val joinOfMeets = removeRedundant(joinOfMeets)
 
     constructor(element: A) : this(persistentSetOf(persistentSetOf(element)))
