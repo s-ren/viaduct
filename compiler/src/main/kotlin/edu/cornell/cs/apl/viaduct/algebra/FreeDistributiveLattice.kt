@@ -1,5 +1,7 @@
 package edu.cornell.cs.apl.viaduct.algebra
 
+import edu.cornell.cs.apl.viaduct.security.FreedistributedLatticeCongruence
+import edu.cornell.cs.apl.viaduct.security.LatticeCongruence
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentSet
@@ -17,11 +19,23 @@ private typealias JoinOfMeets<A> = PersistentSet<Meet<A>>
  */
 class FreeDistributiveLattice<A> private constructor(joinOfMeets: JoinOfMeets<A>) :
     HeytingAlgebra<FreeDistributiveLattice<A>> {
-    //private var congruences: Set<Pair<A, A>>
+    // We assume that the first is greater or equal to the second on the original lattice
+    var congruences: LatticeCongruence<FreeDistributiveLattice<A>> = FreedistributedLatticeCongruence()
+
+    private val joinOfActors = this.join(congruences.joinOfActors)
+    private val meetOfDelegators = this.meet(congruences.meetOfDelegators)
+
 
     private val joinOfMeets = removeRedundant(joinOfMeets)
 
     constructor(element: A) : this(persistentSetOf(persistentSetOf(element)))
+
+    // another constructor with a delegation context
+    constructor(element: A, latticeCongruence: LatticeCongruence<FreeDistributiveLattice<A>>) :
+        this(persistentSetOf(persistentSetOf(element))) {
+        congruences = latticeCongruence
+    }
+
 
     override fun lessThanOrEqualTo(that: FreeDistributiveLattice<A>): Boolean {
         return this.join(that) == that
@@ -78,8 +92,14 @@ class FreeDistributiveLattice<A> private constructor(joinOfMeets: JoinOfMeets<A>
         return result
     }
 
+
+    //override fun equals(other: Any?): Boolean =
+    //    other is FreeDistributiveLattice<*> && this.joinOfMeets == other.joinOfMeets
     override fun equals(other: Any?): Boolean =
-        other is FreeDistributiveLattice<*> && this.joinOfMeets == other.joinOfMeets
+        (other is FreeDistributiveLattice<*>) &&
+            (this.joinOfActors.joinOfMeets == other.joinOfActors.joinOfMeets) &&
+            (this.meetOfDelegators.joinOfMeets == other.meetOfDelegators.joinOfMeets)
+
 
     override fun hashCode(): Int =
         joinOfMeets.hashCode()
